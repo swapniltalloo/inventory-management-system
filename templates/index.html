@@ -4,96 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">📦</span>
-                <h1>Inventory Manager</h1>
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="32" height="32" rx="9" fill="url(#brand-grad)"/>
+                            <path d="M16 6L25 11.2V20.8L16 26L7 20.8V11.2L16 6Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M16 6V16M16 16L25 11.2M16 16L7 11.2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M11.5 8.6L20.5 13.8" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="brand-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#818cf8"/>
+                                    <stop offset="1" stop-color="#4338ca"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1>Inventory Manager</h1>
+                        <p class="header-subtitle">Enterprise Product & Stock Control System</p>
+                    </div>
+                </div>
             </div>
-            <p class="header-subtitle">Product &amp; Stock Management Dashboard</p>
+            <div class="header-right">
+                <div class="header-badge" id="headerBadge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span id="lastUpdated">Just now</span>
+                </div>
+                <!-- Theme Toggle Button with Inner Container to Prevent Double-SVG Nesting -->
+                <button class="btn btn-header" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Theme" aria-label="Toggle Theme">
+                    <span id="themeIconContainer"></span>
+                </button>
+                <!-- Refresh Button (Second Box) -->
+                <button class="btn btn-header" onclick="refreshData()" title="Refresh Dashboard" aria-label="Refresh Dashboard">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- Dashboard Cards -->
-        <section class="dashboard">
-            <div class="card stat-card">
-                <div class="stat-icon blue">📊</div>
-                <div class="stat-info">
-                    <span class="stat-value" id="totalProducts">0</span>
-                    <span class="stat-label">Total Products</span>
+        <!-- Executive Dashboard Cards -->
+        <section class="dashboard" id="dashboardCards">
+            <!-- Total Products Card -->
+            <div class="card stat-card stat-blue">
+                <div class="stat-card-inner">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalProducts">0</span>
+                        <span class="stat-label">Total Products</span>
+                    </div>
                 </div>
+                <div class="stat-decoration"></div>
             </div>
-            <div class="card stat-card">
-                <div class="stat-icon green">📦</div>
-                <div class="stat-info">
-                    <span class="stat-value" id="totalStock">0</span>
-                    <span class="stat-label">Total Stock Units</span>
+
+            <!-- Total Stock Units Card -->
+            <div class="card stat-card stat-green">
+                <div class="stat-card-inner">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 8L12 3L3 8V16L12 21L21 16V8Z"/>
+                            <path d="M12 3V12M21 8L12 12M3 8L12 12"/>
+                            <path d="M17 13.5L12 16L7 13.5"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="totalStock">0</span>
+                        <span class="stat-label">Stock Units</span>
+                    </div>
                 </div>
+                <div class="stat-decoration"></div>
             </div>
-            <div class="card stat-card">
-                <div class="stat-icon red">⚠️</div>
-                <div class="stat-info">
-                    <span class="stat-value" id="lowStockCount">0</span>
-                    <span class="stat-label">Low Stock Items</span>
+
+            <!-- Low Stock Card -->
+            <div class="card stat-card stat-amber">
+                <div class="stat-card-inner">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 9V13M12 17H12.01"/>
+                            <path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.53 21H20.47A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="lowStockCount">0</span>
+                        <span class="stat-label">Low Stock Items</span>
+                    </div>
                 </div>
+                <div class="stat-decoration"></div>
             </div>
-            <div class="card stat-card">
-                <div class="stat-icon purple">💰</div>
-                <div class="stat-info">
-                    <span class="stat-value" id="inventoryValue">$0.00</span>
-                    <span class="stat-label">Inventory Value</span>
+
+            <!-- Inventory Value Card -->
+            <div class="card stat-card stat-purple">
+                <div class="stat-card-inner">
+                    <div class="stat-icon">
+                        <!-- Indian Rupee Currency SVG Emblem -->
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4.5 4.5 0 0 0 0-9"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="inventoryValue">₹0.00</span>
+                        <span class="stat-label">Inventory Valuation (₹)</span>
+                    </div>
                 </div>
+                <div class="stat-decoration"></div>
             </div>
         </section>
 
         <!-- Low Stock Alert Banner -->
         <section id="lowStockAlert" class="alert-banner hidden">
-            <span class="alert-icon">⚠️</span>
-            <span id="lowStockMessage">Some products are running low on stock!</span>
-            <button class="btn btn-sm btn-warning" onclick="showLowStockProducts()">View Low Stock</button>
+            <div class="alert-content">
+                <svg class="alert-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.53 21H20.47A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                <span id="lowStockMessage">Some products are running low on stock!</span>
+            </div>
+            <button class="btn btn-sm btn-warning" onclick="showLowStockProducts()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Filter Low Stock
+            </button>
         </section>
 
-        <!-- Add Product Form -->
+        <!-- Product Management Form Section -->
         <section class="card form-section">
             <div class="section-header">
-                <h2 id="formTitle">➕ Add New Product</h2>
-                <button id="cancelEdit" class="btn btn-secondary hidden" onclick="cancelEdit()">Cancel Edit</button>
+                <div class="section-title">
+                    <div class="section-title-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="12" y1="8" x2="12" y2="16"/>
+                            <line x1="8" y1="12" x2="16" y2="12"/>
+                        </svg>
+                    </div>
+                    <h2 id="formTitle">Add New Product Record</h2>
+                </div>
+                <button id="cancelEdit" class="btn btn-secondary btn-sm hidden" onclick="cancelEdit()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    Cancel Edit
+                </button>
             </div>
             <form id="productForm" onsubmit="handleFormSubmit(event)">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="productId">Product ID *</label>
+                        <label for="productId">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+                            Product ID <span class="required">*</span>
+                        </label>
                         <input type="text" id="productId" placeholder="e.g., PRD-001" required>
                         <span class="error-text" id="productIdError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="productName">Product Name *</label>
+                        <label for="productName">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4"/><path d="M4 7v10l8 4M12 11V3"/></svg>
+                            Product Name <span class="required">*</span>
+                        </label>
                         <input type="text" id="productName" placeholder="e.g., Wireless Mouse" required>
                         <span class="error-text" id="productNameError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="productCategory">Category *</label>
+                        <label for="productCategory">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            Category <span class="required">*</span>
+                        </label>
                         <input type="text" id="productCategory" placeholder="e.g., Electronics" required list="categoryList">
                         <datalist id="categoryList"></datalist>
                         <span class="error-text" id="productCategoryError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="productQuantity">Quantity *</label>
+                        <label for="productQuantity">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                            Quantity <span class="required">*</span>
+                        </label>
                         <input type="number" id="productQuantity" placeholder="e.g., 50" min="0" required>
                         <span class="error-text" id="productQuantityError"></span>
                     </div>
                     <div class="form-group">
-                        <label for="productPrice">Price ($) *</label>
-                        <input type="number" id="productPrice" placeholder="e.g., 29.99" min="0" step="0.01" required>
+                        <label for="productPrice">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4.5 4.5 0 0 0 0-9"/></svg>
+                            Price (₹) <span class="required">*</span>
+                        </label>
+                        <input type="number" id="productPrice" placeholder="e.g., 1499.00" min="0" step="0.01" required>
                         <span class="error-text" id="productPriceError"></span>
                     </div>
                     <div class="form-group form-actions">
-                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">
+                            <svg id="submitIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             <span id="submitBtnText">Add Product</span>
                             <span id="submitSpinner" class="spinner hidden"></span>
                         </button>
@@ -102,47 +216,82 @@
             </form>
         </section>
 
-        <!-- Search and Filter Bar -->
+        <!-- Search & Filter Controls -->
         <section class="card search-section">
             <div class="search-bar">
                 <div class="search-input-wrapper">
-                    <span class="search-icon">🔍</span>
+                    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
                     <input type="text" id="searchInput" placeholder="Search by Product ID, Name, or Category..." oninput="debounceSearch()">
-                    <button id="clearSearch" class="clear-search hidden" onclick="clearSearch()">✕</button>
+                    <button id="clearSearch" class="clear-search hidden" onclick="clearSearch()">&times;</button>
                 </div>
                 <div class="filter-wrapper">
+                    <svg class="filter-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
                     <select id="categoryFilter" onchange="filterByCategory()">
                         <option value="">All Categories</option>
                     </select>
                 </div>
-                <button class="btn btn-secondary" onclick="showLowStockProducts()">🔴 Low Stock Only</button>
+                <button class="btn btn-outline-danger btn-sm" onclick="showLowStockProducts()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.53 21H20.47A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Low Stock Only
+                </button>
             </div>
         </section>
 
-        <!-- Products Table -->
+        <!-- Master Products Data Table -->
         <section class="card table-section">
             <div class="table-header">
-                <h2>📋 Product Inventory</h2>
-                <span class="product-count" id="productCount">0 products</span>
+                <div class="section-title">
+                    <div class="section-title-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                            <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                        </svg>
+                    </div>
+                    <h2>Product Inventory Master</h2>
+                </div>
+                <div class="table-actions">
+                    <span class="product-count" id="productCount">0 products</span>
+                    <button class="btn btn-secondary btn-sm" onclick="exportCSV()" title="Export Catalog to CSV">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export CSV
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="seedSampleData()" title="Seed 5 Sample Products">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        + Demo Data
+                    </button>
+                </div>
             </div>
+
             <div id="loadingIndicator" class="loading">
                 <div class="spinner-large"></div>
-                <p>Loading products...</p>
+                <p>Loading catalog data...</p>
             </div>
+
             <div id="emptyState" class="empty-state hidden">
-                <span class="empty-icon">📭</span>
+                <div class="empty-illustration">
+                    <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                </div>
                 <h3>No Products Found</h3>
-                <p>Add your first product using the form above.</p>
+                <p>Add your first product using the form above or click below to populate sample demo data.</p>
+                <button class="btn btn-primary btn-sm" style="margin-top: 1rem;" onclick="seedSampleData()">
+                    ✨ Seed Sample Inventory
+                </button>
             </div>
+
             <div id="tableContainer" class="table-responsive hidden">
                 <table class="product-table">
                     <thead>
                         <tr>
-                            <th>Product ID</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
+                            <th onclick="sortTable('product_id')" class="sortable">Product ID <span class="sort-icon" id="sort-product_id">↕</span></th>
+                            <th onclick="sortTable('name')" class="sortable">Name <span class="sort-icon" id="sort-name">↕</span></th>
+                            <th onclick="sortTable('category')" class="sortable">Category <span class="sort-icon" id="sort-category">↕</span></th>
+                            <th onclick="sortTable('quantity')" class="sortable">Quantity <span class="sort-icon" id="sort-quantity">↕</span></th>
+                            <th onclick="sortTable('price')" class="sortable">Price (₹) <span class="sort-icon" id="sort-price">↕</span></th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -156,57 +305,121 @@
 
     <!-- Modal for Stock Update -->
     <div id="stockModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeModal('stockModal')"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h3>📦 Update Stock</h3>
-                <button class="modal-close" onclick="closeModal('stockModal')">&times;</button>
+                <div class="modal-title">
+                    <div class="modal-icon modal-icon-green">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    </div>
+                    <h3>Update Stock Quantity</h3>
+                </div>
+                <button class="modal-close" onclick="closeModal('stockModal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
             <div class="modal-body">
-                <p>Product: <strong id="stockProductName"></strong></p>
-                <p>Current Stock: <strong id="stockCurrentQty"></strong></p>
-                <div class="form-group">
-                    <label for="stockChange">Stock Change (use negative to reduce)</label>
+                <div class="modal-info-row">
+                    <span class="modal-info-label">Target Product</span>
+                    <span class="modal-info-value" id="stockProductName"></span>
+                </div>
+                <div class="modal-info-row">
+                    <span class="modal-info-label">Current Stock</span>
+                    <span class="modal-info-value badge badge-info" id="stockCurrentQty"></span>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="stockChange">Stock Adjustment <span class="hint">(positive to add, negative to reduce)</span></label>
                     <input type="number" id="stockChange" placeholder="e.g., 10 or -5">
                     <span class="error-text" id="stockChangeError"></span>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('stockModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="submitStockUpdate()">Update Stock</button>
+                <button class="btn btn-success" onclick="submitStockUpdate()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Apply Stock Update
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Modal for Price Update -->
     <div id="priceModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeModal('priceModal')"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h3>💰 Update Price</h3>
-                <button class="modal-close" onclick="closeModal('priceModal')">&times;</button>
+                <div class="modal-title">
+                    <div class="modal-icon modal-icon-purple">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12M6 8h12M6 13l8.5 8M6 13h3a4.5 4.5 0 0 0 0-9"/></svg>
+                    </div>
+                    <h3>Update Product Price</h3>
+                </div>
+                <button class="modal-close" onclick="closeModal('priceModal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
             </div>
             <div class="modal-body">
-                <p>Product: <strong id="priceProductName"></strong></p>
-                <p>Current Price: $<strong id="priceCurrentVal"></strong></p>
-                <div class="form-group">
-                    <label for="newPrice">New Price ($)</label>
-                    <input type="number" id="newPrice" placeholder="e.g., 29.99" min="0" step="0.01">
+                <div class="modal-info-row">
+                    <span class="modal-info-label">Target Product</span>
+                    <span class="modal-info-value" id="priceProductName"></span>
+                </div>
+                <div class="modal-info-row">
+                    <span class="modal-info-label">Current Unit Price</span>
+                    <span class="modal-info-value">₹<span id="priceCurrentVal"></span></span>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="newPrice">New Unit Price (₹)</label>
+                    <input type="number" id="newPrice" placeholder="e.g., 1499.00" min="0" step="0.01">
                     <span class="error-text" id="newPriceError"></span>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('priceModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="submitPriceUpdate()">Update Price</button>
+                <button class="btn btn-primary" onclick="submitPriceUpdate()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Apply Price Update
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast hidden">
-        <span id="toastMessage"></span>
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeModal('deleteModal')"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <div class="modal-icon modal-icon-red">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                    </div>
+                    <h3>Confirm Deletion</h3>
+                </div>
+                <button class="modal-close" onclick="closeModal('deleteModal')">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="delete-warning">Are you sure you want to delete this product? This action will permanently remove it from the database.</p>
+                <div class="delete-product-info">
+                    <strong id="deleteProductName"></strong>
+                    <span class="text-muted" id="deleteProductId"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('deleteModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                    Delete Record
+                </button>
+            </div>
+        </div>
     </div>
 
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <footer class="footer">
-        <p>&copy; 2026 Inventory Management System — Swapnil Talloo</p>
+        <p>&copy; 2026 Inventory Management System &mdash; Swapnil Talloo</p>
     </footer>
 
     <script src="/static/js/app.js"></script>
